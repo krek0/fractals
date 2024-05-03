@@ -71,7 +71,7 @@ void *render_segment(void *arg) {
       // Multisampling antalisasing
       if (data->sample_n == 0)
       {
-        value = _ship_conv(c);
+        value = _mande_conv(c);
         color = data->colors[value];
       }
       else

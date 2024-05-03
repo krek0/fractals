@@ -4,9 +4,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-// debug mod
-#include "debug.h"
-
 typedef struct
 {
   char r;
@@ -25,11 +22,13 @@ void putpixel(im* img, long x, long y, color* c);
 void getpixel(im* img, long x, long y, color* c);
 void save(char* nom, im* img);
 im* make_im(long width, long height, color* c);
+im* load(char* name, im* img);
 
 void free_im(im* img);
 #endif
 /*
 |========> (x)
+|
 |
 v
 (y)

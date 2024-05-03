@@ -1,19 +1,27 @@
 #include "img.h"
 
-void save(char* nom, im* img)
+// Write a image
+void save(char* name, im* img)
 {
-  FILE* file = fopen(nom, "wb");
+  FILE* file = fopen(name, "wb");
   fprintf(file, "P6\n"); // magic number
   fprintf(file, "%li %li\n", img->width, img->height); // size
   fprintf(file, "%i\n", 255); // max color
   
-  // Point the first pixel
-  // write the colour then advance the pointer to next color
-  // each 3 iteration p is on the next pixel
+  // Write data
   unsigned char* p = img->mat;
-  for (long i = 0; i < img->width*img->height*3; i++)
-    fwrite (p++, 1, 1, file);
+  size_t dataSize = img->width * img->height * 3;
+  fwrite(p, 1, dataSize, file);
+
   fclose(file);
+}
+
+im* load(char* name, im* img)
+{
+	FILE* file = fopen(name, "rb");
+	// Check if this file exist and start with the good magic number
+	if (file == NULL || fgetc(file) != 'P' || fgetc(file) != '6')
+    	return NULL;
 }
 
 void putpixel(im* img, long x, long y, color* c)  
@@ -35,15 +43,13 @@ void getpixel(im* img, long x, long y, color* c)
   c->b = p[2];
 }
 
-// Create a image (with default color c, NULL if no color)
+// Create a image (with default color c, NULL to write nothing)
 im* make_im(long width, long height, color* c)
 {
-  unsigned char* mat = MALLOC(3*height*width);
+  unsigned char* mat = malloc(3*height*width);
   if (c != NULL) // if a default color is fixed
   {
-    // Point the first pixel
-    // write the colour then advance the pointer to next color
-    // each loop iteration p is on the next pixel
+    
     unsigned char* pt = mat;
     for (long i = 0; i < width*height; i++)
     {
@@ -53,7 +59,7 @@ im* make_im(long width, long height, color* c)
     }
   }
   // create img and write image data
-  im* img = MALLOC(sizeof(im));
+  im* img = malloc(sizeof(im));
   img->mat=mat;
   img->height=height;
   img->width=width;
@@ -62,6 +68,6 @@ im* make_im(long width, long height, color* c)
 }
 
 void free_im(im* img){
-  FREE(img->mat);
-  FREE(img);
+  free(img->mat);
+  free(img);
 }
